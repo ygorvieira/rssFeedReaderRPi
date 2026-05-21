@@ -89,62 +89,62 @@ def mostrar_feeds(categoria):
 
 
 def mostrar_noticias(nome_feed, url_feed):
-	while True:
-		limpar_tela()
+    while True:
+        limpar_tela()
 
-		try:
-			feed = carregar_feed(url_feed)
+        try:
+            feed = carregar_feed(url_feed)
 
-		except requests.RequestException as erro:
-			print("Erro ao carregar feed:\n")
-			print(erro)
+        except requests.RequestException as erro:
+            print("Erro ao carregar feed:\n")
+            print(erro)
 
-			input("\nENTER para voltar...")
-			return
+            input("\nENTER para voltar...")
+            return
 
-		except Exception as erro:
-			print("Erro ao interpretar feed:\n")
-			print(erro)
+        except Exception as erro:
+            print("Erro ao interpretar feed:\n")
+            print(erro)
 
-			input("\nENTER para voltar...")
-			return
+            input("\nENTER para voltar...")
+            return
 
-		if feed.bozo:
-			print("Aviso ao interpretar feed:\n")
-			print(feed.bozo_exception)
+        if feed.bozo:
+            print("Aviso ao interpretar feed:\n")
+            print(feed.bozo_exception)
 
-		if not feed.entries:
-			print("Nenhuma notícia encontrada.")
-			input("\nENTER para voltar...")
-			return
+        if not feed.entries:
+            print("Nenhuma notícia encontrada.")
+            input("\nENTER para voltar...")
+            return
 
-			print("=" * 60)
-			print(nome_feed)
-			print("=" * 60)
+        print("=" * 60)
+        print(nome_feed)
+        print("=" * 60)
 
-			noticias = feed.entries[:10]
+        noticias = feed.entries[:10]
 
-			for i, entry in enumerate(noticias, start=1):
-				print(f"\n[{i}] {entry.title}")
-		
-				if hasattr(entry, "published"):
-					print(f"Data: {entry.published}")
+        for i, entry in enumerate(noticias, start=1):
+            print(f"\n[{i}] {entry.title}")
 
-			print("\n[0] Voltar")
+            if hasattr(entry, "published"):
+                print(f"Data: {entry.published}")
 
-		try:
-			opcao = int(input("\nEscolha uma notícia: "))
+        print("\n[0] Voltar")
 
-			if opcao == 0:
-				return None
+        try:
+            opcao = int(input("\nEscolha uma notícia: "))
 
-			noticia = feed.entries[opcao -1]
+            if opcao == 0:
+                return
 
-			ler_noticia(noticia)
+            noticia = noticias[opcao - 1]
 
-		except (ValueError, IndexError) as erro:
-			print(f"\nErro: {erro}")
-			input("\nENTER para continuar...")			
+            ler_noticia(noticia)
+
+        except (ValueError, IndexError) as erro:
+            print(f"\nErro: {erro}")
+            input("\nENTER para continuar...")	
 
 
 def obter_conteudo(entry):

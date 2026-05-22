@@ -8,6 +8,8 @@ import feedparser
 import requests
 import tempfile
 
+from datetime import datetime
+
 from bs4 import BeautifulSoup
 
 from feeds import FEEDS
@@ -40,7 +42,7 @@ def mostrar_categorias():
 		categorias = list(FEEDS.keys())
 
 		print("=" * 60)
-		print("Categorias")
+		print(f"TECHJORNAL, edição de {datetime.now().strftime("%d-%m-%Y")} | Categorias")
 		print("=" * 60)
 
 		for i, categoria in enumerate(categorias, start=1):

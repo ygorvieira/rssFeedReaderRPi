@@ -95,6 +95,9 @@ def mostrar_feeds(categoria):
 def mostrar_noticias(nome_feed, url_feed):
     while True:
         limpar_tela()
+        print("=" * 60)
+        print(f"Carregando notícias de '{nome_feed}'...")
+        print("=" * 60)
 
         try:
             feed = carregar_feed(url_feed)
@@ -210,6 +213,9 @@ def obter_conteudo(entry):
 
 def ler_noticia(entry):
 	limpar_tela()
+	print("=" * 60)
+	print("Carregando conteúdo da notícia...")
+	print("=" * 60)
 	
 	conteudo = obter_conteudo(entry)
 

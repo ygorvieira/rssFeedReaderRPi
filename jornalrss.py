@@ -8,6 +8,8 @@ import feedparser
 import requests
 import tempfile
 
+from bs4 import BeautifulSoup
+
 from feeds import FEEDS
 
 def limpar_tela():
@@ -147,18 +149,62 @@ def mostrar_noticias(nome_feed, url_feed):
             input("\nENTER para continuar...")	
 
 
+def baixar_conteudo_original(url):
+	try:
+		response = requests.get(
+			url,
+			headers={
+				"User-Agent": "Mozilla/5.0"
+			},
+			timeout=10
+		)
+
+		response.raise_for_status()
+
+		soup = BeautifulSoup(response.text, "html.parser")
+
+		paragrafos = soup.find_all("p")
+
+		texto = "\n\n".join(
+			p.get_text(strip=True)
+			for p in paragrafos
+			if p.get_text(strip=True)
+		)
+
+		return texto
+
+	except Exception as erro:
+		return f"Erro ao baixar conteúdo original:\n(erro)"
+
+
+
 def obter_conteudo(entry):
+	conteudo = ""
+
 	if hasattr(entry, "content"):
-		return "\n\n".join(
+		conteudo = "\n\n".join(
 			remover_html(item.value)
 			for item in entry.content
 		)
 
-	if hasattr(entry, "summary"):
-		return remover_html(entry.summary)
+	elif hasattr(entry, "summary"):
+		conteudo = remover_html(entry.summary)
 
-	if hasattr(entry, "description"):
-		return remover_html(entry.description)
+	elif hasattr(entry, "description"):
+		conteudo = remover_html(entry.description)
+
+	conteudo = conteudo.strip()
+
+	#Se RSS trouxer pouco conteúdo,
+	# tenta baixar do site original
+	if len(conteudo) < 500:
+		conteudo_site = baixar_conteudo_original(entry.link)
+
+		if len(conteudo_site) > len(conteudo):
+			return conteudo_site
+
+	return conteudo
+
 
 def ler_noticia(entry):
 	limpar_tela()

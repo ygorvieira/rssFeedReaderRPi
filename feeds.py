@@ -2,12 +2,12 @@ FEEDS = {
 	"Dev": {
 		"Hacker News": "https://news.ycombinator.com/rss",
 		".NET": "https://devblogs.microsoft.com/dotnet/feed/",
-		"It's FOSS": "htpps://itsfoss.com/feed/"
+		"It's FOSS": "https://itsfoss.com/feed/"
 	},
 
 	"Games": {
 		"Kotaku": "https://kotaku.com/rss",
-		"Rock Paper Shotgun": "https://www.rockpapershotgun.com.feed"
+		"Rock Paper Shotgun": "https://www.rockpapershotgun.com/feed"
 	},
 
 	"Anime": {

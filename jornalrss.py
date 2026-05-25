@@ -2,6 +2,7 @@
 
 import os
 import subprocess
+import html
 import re
 
 import feedparser
@@ -18,8 +19,26 @@ def limpar_tela():
 	os.system("clear")
 
 
-def remover_html(texto):
-	return re.sub(r"<[^>]+>", "", texto)
+def limpar_texto(texto):
+    if not texto:
+        return ""
+
+    # Decodifica entidades HTML
+    texto = html.unescape(texto)
+
+    # Remove tags HTML
+    texto = re.sub(r"<[^>]+>", "", texto)
+
+    # Remove caracteres de controle/unicode quebrado
+    texto = re.sub(r"[\x00-\x1F\x7F-\x9F]", "", texto)
+
+    # Remove espaços excessivos
+    texto = re.sub(r"\n\s*\n+", "\n\n", texto)
+
+    # Remove espaços duplicados
+    texto = re.sub(r"[ \t]+", " ", texto)
+
+    return texto.strip()
 
 def carregar_feed(url):
 	response = requests.get(
@@ -188,15 +207,15 @@ def obter_conteudo(entry):
 
 	if hasattr(entry, "content"):
 		conteudo = "\n\n".join(
-			remover_html(item.value)
+			limpar_texto(item.value)
 			for item in entry.content
 		)
 
 	elif hasattr(entry, "summary"):
-		conteudo = remover_html(entry.summary)
+		conteudo = limpar_texto(entry.summary)
 
 	elif hasattr(entry, "description"):
-		conteudo = remover_html(entry.description)
+		conteudo = limpar_texto(entry.description)
 
 	conteudo = conteudo.strip()
 

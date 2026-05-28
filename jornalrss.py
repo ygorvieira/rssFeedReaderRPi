@@ -14,6 +14,7 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 
 from feeds import FEEDS
+from config import get_pager_command
 
 def limpar_tela():
 	os.system("clear")
@@ -260,7 +261,8 @@ Link original:
 	
 		caminho = arquivo.name
 
-	subprocess.run(["less", caminho])
+	cmd, use_shell = get_pager_command(caminho)
+	subprocess.run(cmd, shell=use_shell)
 	
 	os.remove(caminho)
 	
